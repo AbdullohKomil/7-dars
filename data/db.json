@@ -1,0 +1,33 @@
+{
+  "posts": [
+    {
+      "title": "dasdads",
+      "body": "dasdsdasd",
+      "author": "sadasda dsadad",
+      "id": 1
+    }
+  ],
+  "users": [
+    {
+      "email": "dasdas@gmail.com",
+      "password": "$2a$10$5NDt5i6.R8qvazTchPe7KOPF6VmH.PwAzot6EUJkQ3e4Lp0D7.zE.",
+      "first_name": "sadasda",
+      "last_name": "dsadad",
+      "id": 1
+    },
+    {
+      "email": "abdulloh@gmail.com",
+      "password": "$2a$10$TYak6KKDz6eesQf2UqHGte96kbouq96TmJx4ejtkjcgqILY7noddS",
+      "first_name": "Abdulloh",
+      "last_name": "Komiljonov",
+      "id": 2
+    },
+    {
+      "email": "dsdsds@gmail.com",
+      "password": "$2a$10$jb5x7H0hfFbaMH3mq/iHE.JKgjY78v71vmIoTQ8bqc3Cw7INeGEdm",
+      "first_name": "dsdsds",
+      "last_name": "dsdsds",
+      "id": 3
+    }
+  ]
+}
