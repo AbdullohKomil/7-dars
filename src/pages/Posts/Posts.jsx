@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Modal } from '../../components/Modal/Modal';
 import { UserContext } from '../../context/UsersContext';
+import * as Yup from 'yup';
 
 export const Posts = () => {
   const [postModal, setPostModal] = useState(false);
@@ -34,15 +36,9 @@ export const Posts = () => {
     getPost();
   }, []);
 
-  const hanlePost = (evt) => {
-    evt.preventDefault();
-
+  const SubmitPost = (values) => {
     axios
-      .post('http://localhost:8080/posts', {
-        title: titleRef.current.value,
-        body: bodyRef.current.value,
-        author: user.first_name + ' ' + user.last_name,
-      })
+      .post('http://localhost:8080/posts', values)
       .then((data) => {
         if (data.status === 201) {
           setPostModal(false);
@@ -59,25 +55,22 @@ export const Posts = () => {
           .delete(`http://localhost:8080/posts/${post.id}`)
           .catch((err) => console.log(err));
         getPost();
+        location.reload();
       }
 
       setEditModal(false);
     });
   };
 
-  const handleEdit = (evt) => {
-    evt.preventDefault();
-
+  const handleEdit = (values) => {
     const findedPost = posts.find((post) => {
       if (post.id === dataset) {
         axios
-          .put(`http://localhost:8080/posts/${post.id}`, {
-            title: newTitle.current.value,
-            body: newBody.current.value,
-            author: user.first_name + ' ' + user.last_name,
-          })
+          .put(`http://localhost:8080/posts/${post.id}`, values)
           .catch((err) => console.log(err));
         getPost();
+
+        location.reload();
       }
 
       setEditModal(false);
@@ -88,13 +81,34 @@ export const Posts = () => {
   };
   console.log(posts);
 
+  const validationSchemaPost = Yup.object({
+    title: Yup.string().required('Required title !!!'),
+    body: Yup.string().required('Required body !!!'),
+  });
+
+  const initialValuesPost = {
+    title: '',
+    body: '',
+    author: user.first_name + ' ' + user.last_name,
+  };
+
+  const validationSchemaEdit = Yup.object({
+    title: Yup.string().required('Required title !!!'),
+    body: Yup.string().required('Required body !!!'),
+  });
+
+  const initialValuesEdit = {
+    title: '',
+    body: '',
+    author: user.first_name + ' ' + user.last_name,
+  };
   return (
     <div>
       <button
         className='btn btn-outline-success '
         onClick={() => setPostModal(true)}
       >
-        ADD POST +{' '}
+        ADD POST +
       </button>
       <h2 className='h2 text-center my-5'>Posts</h2>
       {posts.length ? (
@@ -134,21 +148,39 @@ export const Posts = () => {
           modal={postModal}
           setModal={setPostModal}
         >
-          <form onSubmit={hanlePost}>
-            <input
-              className='form-control mb-3'
-              ref={titleRef}
-              type='text'
-              placeholder='Title'
-            />
-            <input
-              className='form-control mb-3'
-              ref={bodyRef}
-              type='text'
-              placeholder='Body'
-            />
-            <button className='btn btn-success '>Send</button>
-          </form>
+          <Formik
+            validationSchema={validationSchemaPost}
+            onSubmit={SubmitPost}
+            initialValues={initialValuesPost}
+          >
+            <Form>
+              <div>
+                <Field
+                  className='form-control mb-2'
+                  ref={titleRef}
+                  type='text'
+                  placeholder='Title'
+                  name='title'
+                />
+                <span className='text-danger'>
+                  <ErrorMessage name='title' />
+                </span>
+              </div>
+              <div>
+                <Field
+                  className='form-control mb-2'
+                  ref={bodyRef}
+                  type='text'
+                  name='body'
+                  placeholder='Body'
+                />
+                <span className='text-danger'>
+                  <ErrorMessage name='body' />
+                </span>
+              </div>
+              <button className='btn btn-success '>Send</button>
+            </Form>
+          </Formik>
         </Modal>
       ) : (
         ''
@@ -160,21 +192,40 @@ export const Posts = () => {
           setModal={setEditModal}
           title='Edit Post'
         >
-          <form onSubmit={handleEdit}>
-            <input
-              className='form-control'
-              ref={newTitle}
-              type='text'
-              placeholder='Edit Post Title'
-            />
-            <input
-              className='form-control my-3'
-              ref={newBody}
-              type='text'
-              placeholder='Edit Post Desc'
-            />
-            <button className='btn btn-success'>SEND</button>
-          </form>
+          <Formik
+            initialValues={initialValuesEdit}
+            validationSchema={validationSchemaEdit}
+            onSubmit={handleEdit}
+          >
+            <Form>
+              <div>
+                <Field
+                  className='form-control'
+                  ref={newTitle}
+                  type='text'
+                  placeholder='Edit Post Title'
+                  name='title'
+                />
+                <span className='text-danger'>
+                  <ErrorMessage name='title' />
+                </span>
+              </div>
+
+              <div>
+                <Field
+                  className='form-control my-3'
+                  ref={newBody}
+                  type='text'
+                  placeholder='Edit Post Desc'
+                  name='body'
+                />
+                <span className='text-danger'>
+                  <ErrorMessage name='body' />
+                </span>
+              </div>
+              <button className='btn btn-success'>SEND</button>
+            </Form>
+          </Formik>
         </Modal>
       ) : (
         ''

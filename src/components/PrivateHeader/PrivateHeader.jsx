@@ -12,7 +12,6 @@ export const PrivateHeader = () => {
       <div className='container'>
         <div className='d-flex align-items-center'>
           <Link
-            
             className='fs-4 text-white text-decoration-none'
             to={'/'}
           >
@@ -32,11 +31,6 @@ export const PrivateHeader = () => {
           >
             Users
           </Link>
-          <button onClick={() => {
-            setToken('')
-            setUser('')
-            navigate('/')
-          }} className='btn btn-warning rounded-circle py-2 px-2 ms-auto' >{user.first_name.at(0) + '.' + user.last_name.at(0)}</button>
         </div>
       </div>
     </header>
